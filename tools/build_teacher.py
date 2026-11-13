@@ -35,18 +35,35 @@ rep("""<td class="no">${String(r[13]).padStart(3,'0')}<br>${badge}</td>""",
     """<td class="no">${String(r[13]).padStart(3,'0')}<br>${badge}<label class="pick"><input type="checkbox" data-pick="${i}"${picked.has(i)?' checked':''}>選ぶ</label><button class="pbtn" data-act="present" data-i="${i}">提示</button></td>""")
 rep("  }else if(act==='toggle'){", "  }else if(act==='present'){\n    startPresent(i);\n  }else if(act==='toggle'){")
 
+# 絞り込み（並び順・科目・分野・難易度など）は、固定した帯の中の開閉パネルに移す
+rep('    <input type="search" id="q" placeholder="キーワードで絞り込み" aria-label="キーワードで絞り込み">\n    <span class="count" id="count"></span>\n', '')
+m = re.search(r'  <div class="controls">\n    <span class="ctl-label">並び順.*?\n(?=  <div class="tablebox" id="box">)', s, flags=re.S)
+if not m: sys.exit('絞り込みの部分が見つかりません')
+FILTERS = m.group(0)
+s = s[:m.start()] + s[m.end():]
 TOOLBAR = '''  <div class="tbar" id="tbar">
-    <span class="tb-count" id="pk-count">選んだ問題：0題</span>
-    <button class="tb-btn" id="pk-all">表示中の問題をすべて選ぶ</button>
-    <button class="tb-btn" id="pk-clear">選択を解除</button>
-    <span class="tb-sep"></span>
-    <button class="tb-btn tb-main" id="pv-start">提示モード</button>
-    <button class="tb-btn tb-main" id="ws-print">ワークシートを印刷</button>
-    <label class="tb-opt"><input type="checkbox" id="ws-ch" checked>ワークシートに選択肢をのせる</label>
-    <span class="tb-msg" id="tb-msg" role="status"></span>
+    <div class="tb-row">
+      <button class="tb-btn tb-f" id="f-tg" aria-expanded="false" aria-controls="fpanel">絞り込み ▼</button>
+      <span class="tb-sum" id="f-sum"></span>
+      <input type="search" id="q" placeholder="キーワードで絞り込み" aria-label="キーワードで絞り込み">
+      <span class="count" id="count"></span>
+    </div>
+    <div class="tb-row">
+      <span class="tb-count" id="pk-count">選んだ問題：0題</span>
+      <button class="tb-btn" id="pk-all">表示中の問題をすべて選ぶ</button>
+      <button class="tb-btn" id="pk-clear">選択を解除</button>
+      <span class="tb-sep"></span>
+      <button class="tb-btn tb-main" id="pv-start">提示モード</button>
+      <button class="tb-btn tb-main" id="ws-print">ワークシートを印刷</button>
+      <label class="tb-opt"><input type="checkbox" id="ws-ch" checked>ワークシートに選択肢をのせる</label>
+      <span class="tb-msg" id="tb-msg" role="status"></span>
+    </div>
+    <div class="fpanel" id="fpanel" hidden>
+''' + FILTERS + '''    </div>
   </div>
 '''
 rep('  <div class="tablebox" id="box">', TOOLBAR + '  <div class="tablebox" id="box">')
+rep("  count.textContent=n+'題'+(nc?`・コラム${nc}`:'');", "  count.textContent=n+'題'+(nc?`・コラム${nc}`:'');\n  if(typeof updSum==='function')updSum();")
 
 OVERLAY = '''
 <div id="pv" hidden role="dialog" aria-label="提示モード">
@@ -68,7 +85,15 @@ rep('\n<script>\n', OVERLAY + '\n<script>\n')
 CSS = '''
 /* ===== 教師用 ===== */
 .lead a{color:var(--accent);font-weight:700}
-.tbar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 12px;border:1px solid var(--accent);border-radius:10px;background:var(--accent-soft)}
+.tbar{position:sticky;top:0;z-index:5;display:grid;gap:8px;padding:10px 12px;border:1px solid var(--accent);border-radius:10px;background:var(--accent-soft);box-shadow:0 2px 6px rgba(0,0,0,.06)}
+.tb-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tb-f{font-weight:700;border-color:var(--accent);color:var(--accent)}
+.tb-f[aria-expanded="true"]{background:var(--accent);color:var(--surface)}
+.tb-sum{font-size:.85rem;color:var(--fg);font-weight:500}
+.tbar input[type=search]{margin-left:auto}
+.fpanel{display:grid;gap:10px;padding-top:10px;border-top:1px solid var(--accent);max-height:55vh;overflow:auto}
+.fpanel[hidden]{display:none}
+@media (max-width:760px){.tbar{position:static}.tbar input[type=search]{margin-left:0}}
 .tb-count{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;margin-right:4px}
 .tb-btn{font:inherit;font-size:.9rem;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:8px;padding:5px 12px;cursor:pointer}
 .tb-main{border-color:var(--accent);background:var(--accent);color:var(--surface);font-weight:700}
@@ -216,6 +241,17 @@ document.getElementById('ws-print').addEventListener('click',()=>{
   setTimeout(()=>window.print(),50);
 });
 updPk();
+const fTg=document.getElementById('f-tg'),fPanel=document.getElementById('fpanel'),fSum=document.getElementById('f-sum');
+fTg.addEventListener('click',()=>{const o=fPanel.hidden;fPanel.hidden=!o;fTg.setAttribute('aria-expanded',o);fTg.textContent=o?'絞り込み ▲':'絞り込み ▼'});
+function updSum(){
+  const p=[];
+  p.push(subj==='all'?'すべての科目':subj);
+  p.push(dom==='all'?'すべての分野':dom);
+  if(lv!=='0')p.push('★'.repeat(+lv));
+  if(ord==='field')p.push('分野ごとの順');
+  if(!showCol)p.push('コラムなし');
+  fSum.textContent='条件：'+p.join('・');
+}
 '''
 rep('\nrender();\n</script>', '\n' + JS + '\nrender();\n</script>')
 out = root / 'teacher' / 'index.html'

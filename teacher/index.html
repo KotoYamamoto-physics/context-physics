@@ -137,7 +137,15 @@ tr.reveal td{background:var(--answer-soft);border-bottom:2px solid var(--answer)
 
 /* ===== 教師用 ===== */
 .lead a{color:var(--accent);font-weight:700}
-.tbar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 12px;border:1px solid var(--accent);border-radius:10px;background:var(--accent-soft)}
+.tbar{position:sticky;top:0;z-index:5;display:grid;gap:8px;padding:10px 12px;border:1px solid var(--accent);border-radius:10px;background:var(--accent-soft);box-shadow:0 2px 6px rgba(0,0,0,.06)}
+.tb-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tb-f{font-weight:700;border-color:var(--accent);color:var(--accent)}
+.tb-f[aria-expanded="true"]{background:var(--accent);color:var(--surface)}
+.tb-sum{font-size:.85rem;color:var(--fg);font-weight:500}
+.tbar input[type=search]{margin-left:auto}
+.fpanel{display:grid;gap:10px;padding-top:10px;border-top:1px solid var(--accent);max-height:55vh;overflow:auto}
+.fpanel[hidden]{display:none}
+@media (max-width:760px){.tbar{position:static}.tbar input[type=search]{margin-left:0}}
 .tb-count{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;margin-right:4px}
 .tb-btn{font:inherit;font-size:.9rem;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:8px;padding:5px 12px;cursor:pointer}
 .tb-main{border-color:var(--accent);background:var(--accent);color:var(--surface);font-weight:700}
@@ -215,6 +223,24 @@ tr.card:has(.pick input:checked) td{background:var(--accent-soft)}
     <h1>身のまわりから考える物理　教師用</h1>
     <p class="lead">授業の準備に使う画面です。問題の「選ぶ」にチェックを入れて、<b>提示モード</b>（プロジェクターで1問ずつ映す）や<b>ワークシートの印刷</b>（A4横・右側の解説を切り取って配る）に使えます。各問題の「提示」から、その問題をすぐ映すこともできます。<br>生徒用のページ：<a href="../">身のまわりから考える物理</a>（このページのリンクは生徒に伝えないでください）</p>
   </header>
+  <div class="tbar" id="tbar">
+    <div class="tb-row">
+      <button class="tb-btn tb-f" id="f-tg" aria-expanded="false" aria-controls="fpanel">絞り込み ▼</button>
+      <span class="tb-sum" id="f-sum"></span>
+      <input type="search" id="q" placeholder="キーワードで絞り込み" aria-label="キーワードで絞り込み">
+      <span class="count" id="count"></span>
+    </div>
+    <div class="tb-row">
+      <span class="tb-count" id="pk-count">選んだ問題：0題</span>
+      <button class="tb-btn" id="pk-all">表示中の問題をすべて選ぶ</button>
+      <button class="tb-btn" id="pk-clear">選択を解除</button>
+      <span class="tb-sep"></span>
+      <button class="tb-btn tb-main" id="pv-start">提示モード</button>
+      <button class="tb-btn tb-main" id="ws-print">ワークシートを印刷</button>
+      <label class="tb-opt"><input type="checkbox" id="ws-ch" checked>ワークシートに選択肢をのせる</label>
+      <span class="tb-msg" id="tb-msg" role="status"></span>
+    </div>
+    <div class="fpanel" id="fpanel" hidden>
   <div class="controls">
     <span class="ctl-label">並び順</span>
     <div class="seg" role="group" aria-label="並び順">
@@ -244,18 +270,8 @@ tr.card:has(.pick input:checked) td{background:var(--accent-soft)}
     </div>
     <button class="unused-toggle" id="c-tg" aria-pressed="true">コラムも表示</button>
     <button class="unused-toggle" id="ch-tg" aria-pressed="true">選択肢をはじめから表示</button>
-    <input type="search" id="q" placeholder="キーワードで絞り込み" aria-label="キーワードで絞り込み">
-    <span class="count" id="count"></span>
   </div>
-  <div class="tbar" id="tbar">
-    <span class="tb-count" id="pk-count">選んだ問題：0題</span>
-    <button class="tb-btn" id="pk-all">表示中の問題をすべて選ぶ</button>
-    <button class="tb-btn" id="pk-clear">選択を解除</button>
-    <span class="tb-sep"></span>
-    <button class="tb-btn tb-main" id="pv-start">提示モード</button>
-    <button class="tb-btn tb-main" id="ws-print">ワークシートを印刷</button>
-    <label class="tb-opt"><input type="checkbox" id="ws-ch" checked>ワークシートに選択肢をのせる</label>
-    <span class="tb-msg" id="tb-msg" role="status"></span>
+    </div>
   </div>
   <div class="tablebox" id="box">
     <table>
@@ -450,6 +466,7 @@ function render(){
   });
   tb.innerHTML=html||`<tr><td colspan="${NC}">該当する問題がありません。条件やキーワードを変えてください。</td></tr>`;
   count.textContent=n+'題'+(nc?`・コラム${nc}`:'');
+  if(typeof updSum==='function')updSum();
 }
 tb.addEventListener('click',e=>{
   const btn=e.target.closest('button[data-act]');if(!btn)return;
@@ -558,6 +575,17 @@ document.getElementById('ws-print').addEventListener('click',()=>{
   setTimeout(()=>window.print(),50);
 });
 updPk();
+const fTg=document.getElementById('f-tg'),fPanel=document.getElementById('fpanel'),fSum=document.getElementById('f-sum');
+fTg.addEventListener('click',()=>{const o=fPanel.hidden;fPanel.hidden=!o;fTg.setAttribute('aria-expanded',o);fTg.textContent=o?'絞り込み ▲':'絞り込み ▼'});
+function updSum(){
+  const p=[];
+  p.push(subj==='all'?'すべての科目':subj);
+  p.push(dom==='all'?'すべての分野':dom);
+  if(lv!=='0')p.push('★'.repeat(+lv));
+  if(ord==='field')p.push('分野ごとの順');
+  if(!showCol)p.push('コラムなし');
+  fSum.textContent='条件：'+p.join('・');
+}
 
 render();
 </script>
