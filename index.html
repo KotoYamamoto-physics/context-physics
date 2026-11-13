@@ -31,7 +31,16 @@ body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:14
 .wrap{max-width:1600px;margin:0 auto;padding-inline:16px;padding-block:28px 48px;display:grid;gap:18px}
 header{display:grid;gap:8px}
 h1{font-family:var(--f-display);font-weight:800;font-size:1.9rem;line-height:1.3;margin:0;text-wrap:balance}
-.lead{margin:0;color:var(--muted);max-width:none}
+.lead{margin:0;color:var(--muted);display:grid;gap:6px;max-width:none}
+.lead p,.lead ul{margin:0}
+.lead ul{padding-left:1.3em;display:grid;gap:2px}
+.lead b{color:var(--fg)}
+.lead .lv{display:inline-block;margin-right:1.5em;white-space:nowrap}
+@media (max-width:760px){.lead .lv{white-space:normal;display:block}}
+.lead .cond{font-size:.88em}
+body{word-break:auto-phrase;line-break:strict}
+p,li,td{text-wrap:pretty}
+.nb{display:inline-block}
 .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
 .seg button{font:inherit;border:0;background:transparent;color:var(--fg);padding:6px 12px;cursor:pointer}
@@ -137,8 +146,20 @@ tr.reveal td{background:var(--answer-soft);border-bottom:2px solid var(--answer)
 
 <div class="wrap">
   <header>
-    <h1>身のまわりから考える物理　物理基礎・物理</h1>
-    <p class="lead">身のまわりの「なぜ？」を物理で考える問題集です。まず自分の予想と理由を考え、ノートに書いてから「解答・解説を見る」を押しましょう。選択肢のある問題も、はじめは選択肢を隠してあります。まず自分の言葉で予想してから「選択肢を見る」を押しましょう。★の数は難しさの目安です（★：1つの法則や知識で考えられる、★★：法則を当てはめて2段階ほど考える、★★★：いくつかの法則を組み合わせたり、直感に反する結果をじっくり考えたりする）。授業で学んだことを使って、説明し直してみることも大切です。特に断りのない限り、重力加速度 g = 9.8 m/s²、音速 340 m/s とします。並び順は、物理基礎と物理を分けて学ぶ人は「物理基礎 → 物理」、『総合物理』で学ぶ人は「分野ごと」を選びましょう。問題番号は並び順を変えても変わりません。ところどころにある「コラム」は、物理が身のまわりや最先端の研究でどう生きているかを紹介する読み物です。</p>
+    <h1><span class="nb">身のまわりから考える物理</span>　<span class="nb">物理基礎・物理</span></h1>
+    <div class="lead">
+      <p>身のまわりの「なぜ？」を、物理で考える問題集です。</p>
+      <ul>
+        <li>まず自分の予想と理由を考え、ノートに書いてから「解答・解説を見る」を押しましょう。</li>
+        <li>選択肢のある問題も、はじめは選択肢を隠してあります。自分の言葉で予想してから「選択肢を見る」を押しましょう。</li>
+        <li>授業で学んだことを使って、説明し直してみることも大切です。</li>
+      </ul>
+      <p><b>★の数</b>は難しさの目安です。<br>
+        <span class="lv">★：1つの法則や知識で考えられる</span><span class="lv">★★：法則を当てはめて2段階ほど考える</span><span class="lv">★★★：いくつかの法則を組み合わせたり、直感に反する結果をじっくり考えたりする</span></p>
+      <p><b>並び順</b>は、物理基礎と物理を分けて学ぶ人は「物理基礎 → 物理」、『総合物理』で学ぶ人は「分野ごと」を選びましょう。問題番号は、並び順を変えても変わりません。</p>
+      <p>ところどころにある<b>「コラム」</b>は、物理が身のまわりや最先端の研究でどう生きているかを紹介する読み物です。</p>
+      <p class="cond">特に断りのない限り、重力加速度 g = 9.8 m/s²、音速 340&nbsp;m/s とします。</p>
+    </div>
   </header>
   <div class="controls">
     <span class="ctl-label">並び順</span>

@@ -32,7 +32,16 @@ body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:14
 .wrap{max-width:1600px;margin:0 auto;padding-inline:16px;padding-block:28px 48px;display:grid;gap:18px}
 header{display:grid;gap:8px}
 h1{font-family:var(--f-display);font-weight:800;font-size:1.9rem;line-height:1.3;margin:0;text-wrap:balance}
-.lead{margin:0;color:var(--muted);max-width:none}
+.lead{margin:0;color:var(--muted);display:grid;gap:6px;max-width:none}
+.lead p,.lead ul{margin:0}
+.lead ul{padding-left:1.3em;display:grid;gap:2px}
+.lead b{color:var(--fg)}
+.lead .lv{display:inline-block;margin-right:1.5em;white-space:nowrap}
+@media (max-width:760px){.lead .lv{white-space:normal;display:block}}
+.lead .cond{font-size:.88em}
+body{word-break:auto-phrase;line-break:strict}
+p,li,td{text-wrap:pretty}
+.nb{display:inline-block}
 .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
 .seg button{font:inherit;border:0;background:transparent;color:var(--fg);padding:6px 12px;cursor:pointer}
@@ -220,8 +229,16 @@ tr.card:has(.pick input:checked) td{background:var(--accent-soft)}
 
 <div class="wrap">
   <header>
-    <h1>身のまわりから考える物理　教師用</h1>
-    <p class="lead">授業の準備に使う画面です。問題の「選ぶ」にチェックを入れて、<b>提示モード</b>（プロジェクターで1問ずつ映す）や<b>ワークシートの印刷</b>（A4横・右側の解説を切り取って配る）に使えます。各問題の「提示」から、その問題をすぐ映すこともできます。<br>生徒用のページ：<a href="../">身のまわりから考える物理</a>（このページのリンクは生徒に伝えないでください）</p>
+    <h1><span class="nb">身のまわりから考える物理</span>　<span class="nb">教師用</span></h1>
+    <div class="lead">
+      <p>授業の準備に使う画面です。</p>
+      <ul>
+        <li>問題の「選ぶ」にチェックを入れると、<b>提示モード</b>（プロジェクターで1問ずつ映す）や、<b>ワークシートの印刷</b>（A4横・右側の解説を切り取って配る）に使えます。</li>
+        <li>各問題の「提示」を押すと、その問題をすぐに映せます。</li>
+        <li>「絞り込み ▼」から、科目・分野・難易度などで問題を絞り込めます。</li>
+      </ul>
+      <p>生徒用のページ：<a href="../">身のまわりから考える物理</a>（このページのリンクは、生徒には伝えないでください）</p>
+    </div>
   </header>
   <div class="tbar" id="tbar">
     <div class="tb-row">
