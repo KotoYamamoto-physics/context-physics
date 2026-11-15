@@ -245,8 +245,10 @@ document.getElementById('ws-print').addEventListener('click',()=>{
     `<div class="ws-name">　　年　　組　　番　氏名＿＿＿＿＿＿＿＿＿＿＿＿</div><p class="ws-q">${esc(r[7])}</p>${fig?`<figure class="fig">${fig}</figure>`:''}${withCh&&r[8].length?chList(r[8],'ws-ch'):''}`+
     `<div class="ws-lab">自分の答え（予想）</div><div class="ws-a1"></div><div class="ws-lab">そう考えた理由</div><div class="ws-lines"></div></div>`+
     `<div class="ws-r"><span class="ws-cut">✂</span><h4>模範解答</h4><p class="ws-a">${esc(r[9])}</p><h4>解説</h4><p>${esc(r[10])}</p>${afig?`<figure class="fig">${afig}</figure>`:''}</div></section>`}).join('');
-  tbMsg.textContent='';
-  setTimeout(()=>window.print(),50);
+  const mobile=matchMedia('(max-width:900px),(pointer:coarse)').matches;
+  tbMsg.textContent=mobile?'印刷画面で、用紙が「A4・横」になっているか確認してください。':'';
+  if(typeof window.print!=='function'){tbMsg.textContent='このブラウザでは印刷できません。Safari や Chrome で開き直してください。';return}
+  try{window.print()}catch(e){tbMsg.textContent='印刷画面を開けませんでした。Safari や Chrome で開き直してください。'}
 });
 updPk();
 const fTg=document.getElementById('f-tg'),fPanel=document.getElementById('fpanel'),fSum=document.getElementById('f-sum');
