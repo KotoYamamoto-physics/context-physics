@@ -206,37 +206,45 @@ tr.card:has(.pick input:checked) td{background:var(--accent-soft)}
 .pv-s[aria-pressed="true"]{background:var(--answer-soft)}
 .pv-b:disabled{opacity:.35;cursor:default}
 .pv-help{margin:0;padding:0 12px 10px;text-align:center;color:var(--muted);font-size:.8rem}
-/* ワークシート（印刷） */
+/* ワークシート（印刷・PDF共通） */
 #print{display:none}
+#pdfbox{position:fixed;left:-30000px;top:0;width:281mm;background:#fff}
+.wsheet{--fg:#000;--muted:#444;--surface:#fff;--soft:#e6e6e6;--water:#d2e4f2;--accent:#1f6b5c;--line:#999;--carrot:#e8925a;color:#000;background:#fff;font-family:var(--f-body)}
+.wsheet .sheet{height:190mm;display:grid;grid-template-columns:62fr 38fr;grid-template-rows:100%;overflow:hidden;background:#fff}
+.wsheet .ws-l{display:flex;flex-direction:column;gap:2.2mm;padding-right:5mm;font-size:10.5pt;line-height:1.6;min-height:0}
+.wsheet .ws-h{display:flex;gap:3mm;align-items:baseline;border-bottom:1.2pt solid #000;padding-bottom:1mm}
+.wsheet .ws-no{font-family:var(--f-mono);font-size:9pt}
+.wsheet .ws-h b{font-size:13pt}
+.wsheet .ws-el{margin-left:auto;font-size:8.5pt;color:#444}
+.wsheet .ws-name{font-size:9.5pt;text-align:right}
+.wsheet .ws-q{margin:0;white-space:pre-line}
+.wsheet .ws-l .fig{margin:0;padding:1.5mm;border:0.6pt solid #999;align-self:center}
+.wsheet .ws-l .fig svg{max-width:100%;max-height:58mm;width:auto;height:58mm}
+.wsheet .ws-ch{margin:0;padding-left:7mm;list-style:none}
+.wsheet .ws-ch li{position:relative}.wsheet .ws-ch li::before{content:attr(data-l);position:absolute;left:-5mm;font-weight:700}
+.wsheet .ws-lab{font-size:9pt;font-weight:700;margin-top:1mm}
+.wsheet .ws-a1{height:14mm;flex:0 0 14mm;border:0.8pt solid #000;border-radius:2mm}
+.wsheet .ws-r.long{font-size:7.6pt;line-height:1.45}
+.wsheet .ws-r.long .fig svg{max-height:36mm}
+.wsheet .ws-l.long .fig svg{max-height:44mm;height:44mm}
+.wsheet .ws-lines{flex:1 1 auto;min-height:22mm;border:0.8pt solid #000;border-radius:2mm}
+.wsheet .ws-r{border-left:1pt dashed #000;padding-left:5mm;font-size:8.6pt;line-height:1.55;position:relative;overflow:hidden}
+.wsheet .ws-cut{position:absolute;top:0;left:-3.2mm;font-size:9pt;background:#fff;line-height:1}
+.wsheet .ws-r h4{margin:2mm 0 .5mm;font-size:8.6pt}
+.wsheet .ws-r .ws-a{margin:0;font-weight:700}
+.wsheet .ws-r p{margin:0;white-space:pre-line}
+.wsheet .ws-r .fig{margin:2mm 0 0;padding:1mm;border:0.6pt solid #999}
+.wsheet .ws-r .fig svg{max-width:100%;max-height:45mm;width:auto}
+.wsheet .fig svg text.sm{fill:#444}
+.tb-pdf{display:inline-flex;gap:6px;align-items:center}
+.tb-pdf button{font:inherit;font-size:.85rem;font-weight:700;border:1px solid var(--answer);background:var(--answer);color:var(--surface);border-radius:8px;padding:4px 12px;cursor:pointer}
 @page{size:A4 landscape;margin:8mm}
 @media print{
   html,body{background:#fff!important;margin:0!important;padding:0!important}
-  .wrap,#pv{display:none!important}
-  #print{display:block;--fg:#000;--muted:#444;--surface:#fff;--soft:#e6e6e6;--water:#d2e4f2;--accent:#1f6b5c;--line:#999;--carrot:#e8925a;color:#000;font-family:var(--f-body)}
-  .sheet{height:190mm;display:grid;grid-template-columns:62fr 38fr;grid-template-rows:100%;overflow:hidden;break-after:page;page-break-after:always}
-  .sheet:last-child{break-after:auto;page-break-after:auto}
-  .ws-l{display:flex;flex-direction:column;gap:2.2mm;padding-right:5mm;font-size:10.5pt;line-height:1.6;min-height:0}
-  .ws-h{display:flex;gap:3mm;align-items:baseline;border-bottom:1.2pt solid #000;padding-bottom:1mm}
-  .ws-no{font-family:var(--f-mono);font-size:9pt}
-  .ws-h b{font-size:13pt}
-  .ws-el{margin-left:auto;font-size:8.5pt;color:#444}
-  .ws-name{font-size:9.5pt;text-align:right}
-  .ws-q{margin:0;white-space:pre-line}
-  .ws-l .fig{margin:0;padding:1.5mm;border:0.6pt solid #999;align-self:center}
-  .ws-l .fig svg{max-width:100%;max-height:58mm;width:auto;height:58mm}
-  .ws-ch{margin:0;padding-left:7mm;list-style:none}
-  .ws-ch li{position:relative}.ws-ch li::before{content:attr(data-l);position:absolute;left:-5mm;font-weight:700}
-  .ws-lab{font-size:9pt;font-weight:700;margin-top:1mm}
-  .ws-a1{height:14mm;border:0.8pt solid #000;border-radius:2mm}
-  .ws-lines{flex:1 1 auto;min-height:22mm;border:0.8pt solid #000;border-radius:2mm}
-  .ws-r{border-left:1pt dashed #000;padding-left:5mm;font-size:8.6pt;line-height:1.55;position:relative;overflow:hidden}
-  .ws-cut{position:absolute;top:0;left:-3.2mm;font-size:9pt;background:#fff;line-height:1}
-  .ws-r h4{margin:2mm 0 .5mm;font-size:8.6pt}
-  .ws-r .ws-a{margin:0;font-weight:700}
-  .ws-r p{margin:0;white-space:pre-line}
-  .ws-r .fig{margin:2mm 0 0;padding:1mm;border:0.6pt solid #999}
-  .ws-r .fig svg{max-width:100%;max-height:45mm;width:auto}
-  .fig svg text.sm{fill:#444}
+  .wrap,#pv,#pdfbox{display:none!important}
+  #print{display:block}
+  #print .sheet{break-after:page;page-break-after:always}
+  #print .sheet:last-child{break-after:auto;page-break-after:auto}
 }
 </style>
 
@@ -267,6 +275,7 @@ tr.card:has(.pick input:checked) td{background:var(--accent-soft)}
       <span class="tb-sep"></span>
       <button class="tb-btn tb-main" id="pv-start">提示モード</button>
       <button class="tb-btn tb-main" id="ws-print">ワークシートを印刷</button>
+      <button class="tb-btn tb-main" id="ws-pdf">ワークシートをPDFで保存</button>
       <label class="tb-opt"><input type="checkbox" id="ws-ch" checked>ワークシートに選択肢をのせる</label>
       <span class="tb-msg" id="tb-msg" role="status"></span>
     </div>
@@ -328,7 +337,8 @@ tr.card:has(.pick input:checked) td{background:var(--accent-soft)}
   </div>
   <p class="pv-help">キー操作：スペース … 次の段階（選択肢 → 答え → 解説）　← → … 前・次の問題　Esc … 閉じる</p>
 </div>
-<div id="print" aria-hidden="true"></div>
+<div id="print" class="wsheet" aria-hidden="true"></div>
+<div id="pdfbox" class="wsheet" aria-hidden="true"></div>
 
 <script>
 const L=(a,b,c,d,k='')=>`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" class="${k}"/>`;
@@ -609,20 +619,84 @@ document.addEventListener('keydown',e=>{
 });
 /* ワークシート */
 const prt=document.getElementById('print');
+function sheetsHtml(list,withCh){
+  return list.map(i=>{const r=D[i],fig=FIG[r[6]],afig=FIG[r[6]+'#解答'];
+    return `<section class="sheet"><div class="ws-l${(r[7].length+(r[8].length&&withCh?r[8].join("").length:0))>230&&fig?' long':''}"><div class="ws-h"><span class="ws-no">No.${String(r[13]).padStart(3,'0')}</span><b>${esc(r[6])}</b><span class="ws-el">${esc(r[0])}　${esc(r[4])}</span></div>`+
+    `<div class="ws-name">　　年　　組　　番　氏名＿＿＿＿＿＿＿＿＿＿＿＿</div><p class="ws-q">${esc(r[7])}</p>${fig?`<figure class="fig">${fig}</figure>`:''}${withCh&&r[8].length?chList(r[8],'ws-ch'):''}`+
+    `<div class="ws-lab">自分の答え（予想）</div><div class="ws-a1"></div><div class="ws-lab">そう考えた理由</div><div class="ws-lines"></div></div>`+
+    `<div class="ws-r${(r[10].length+(afig?250:0))>650?' long':''}"><span class="ws-cut">✂</span><h4>模範解答</h4><p class="ws-a">${esc(r[9])}</p><h4>解説</h4><p>${esc(r[10])}</p>${afig?`<figure class="fig">${afig}</figure>`:''}</div></section>`}).join('');
+}
+const isAppMode=()=>window.navigator.standalone===true||matchMedia('(display-mode: standalone)').matches;
 document.getElementById('ws-print').addEventListener('click',()=>{
   const list=pickedInOrder();
   if(!list.length){tbMsg.textContent='先に、印刷する問題の「選ぶ」にチェックを入れてください。';return}
-  const withCh=document.getElementById('ws-ch').checked;
-  prt.innerHTML=list.map(i=>{const r=D[i],fig=FIG[r[6]],afig=FIG[r[6]+'#解答'];
-    return `<section class="sheet"><div class="ws-l"><div class="ws-h"><span class="ws-no">No.${String(r[13]).padStart(3,'0')}</span><b>${esc(r[6])}</b><span class="ws-el">${esc(r[0])}　${esc(r[4])}</span></div>`+
-    `<div class="ws-name">　　年　　組　　番　氏名＿＿＿＿＿＿＿＿＿＿＿＿</div><p class="ws-q">${esc(r[7])}</p>${fig?`<figure class="fig">${fig}</figure>`:''}${withCh&&r[8].length?chList(r[8],'ws-ch'):''}`+
-    `<div class="ws-lab">自分の答え（予想）</div><div class="ws-a1"></div><div class="ws-lab">そう考えた理由</div><div class="ws-lines"></div></div>`+
-    `<div class="ws-r"><span class="ws-cut">✂</span><h4>模範解答</h4><p class="ws-a">${esc(r[9])}</p><h4>解説</h4><p>${esc(r[10])}</p>${afig?`<figure class="fig">${afig}</figure>`:''}</div></section>`}).join('');
+  if(isAppMode()){tbMsg.textContent='ホーム画面から開いた画面では印刷できません。「ワークシートをPDFで保存」を使ってください。';return}
+  prt.innerHTML=sheetsHtml(list,document.getElementById('ws-ch').checked);
   const mobile=matchMedia('(max-width:900px),(pointer:coarse)').matches;
-  tbMsg.textContent=mobile?'印刷画面で、用紙が「A4・横」になっているか確認してください。':'';
-  if(typeof window.print!=='function'){tbMsg.textContent='このブラウザでは印刷できません。Safari や Chrome で開き直してください。';return}
-  try{window.print()}catch(e){tbMsg.textContent='印刷画面を開けませんでした。Safari や Chrome で開き直してください。'}
+  tbMsg.textContent=mobile?'印刷画面で、用紙が「A4・横」になっているか確認してください。うまくいかないときは「ワークシートをPDFで保存」を使ってください。':'';
+  if(typeof window.print!=='function'){tbMsg.textContent='このブラウザでは印刷できません。「ワークシートをPDFで保存」を使ってください。';return}
+  try{window.print()}catch(e){tbMsg.textContent='印刷画面を開けませんでした。「ワークシートをPDFで保存」を使ってください。'}
 });
+/* PDF で保存（ホーム画面から開いた iPhone などでも使える） */
+const LIB=(()=>{const s=document.currentScript&&document.currentScript.src;return '../lib/'})();
+function loadScript(src){return new Promise((ok,ng)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=()=>ng(new Error(src));document.head.appendChild(s)})}
+async function loadPdfLibs(){
+  if(!window.html2canvas)await loadScript(LIB+'html2canvas.min.js');
+  if(!(window.jspdf&&window.jspdf.jsPDF))await loadScript(LIB+'jspdf.umd.min.js');
+}
+const SVGP=['fill','stroke','stroke-width','stroke-dasharray','stroke-linecap','stroke-linejoin','fill-rule','opacity','font-size','font-family','font-weight','text-anchor'];
+async function inlineSvg(root){
+  const jobs=[...root.querySelectorAll('svg')].map(svg=>{
+    const r=svg.getBoundingClientRect(),w=Math.max(1,Math.round(r.width)),h=Math.max(1,Math.round(r.height));
+    svg.querySelectorAll('*').forEach(el=>{const cs=getComputedStyle(el);el.setAttribute('style',SVGP.map(k=>k+':'+cs.getPropertyValue(k)).join(';'))});
+    const cs=getComputedStyle(svg);
+    const c=svg.cloneNode(true);c.setAttribute('xmlns','http://www.w3.org/2000/svg');c.setAttribute('width',w*3);c.setAttribute('height',h*3);
+    c.setAttribute('style',SVGP.map(k=>k+':'+cs.getPropertyValue(k)).join(';'));
+    const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(c));
+    return new Promise(ok=>{const img=new Image();img.onload=()=>{const cv=document.createElement('canvas');cv.width=w*3;cv.height=h*3;const g=cv.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,cv.width,cv.height);g.drawImage(img,0,0,cv.width,cv.height);
+      const im=document.createElement('img');im.src=cv.toDataURL('image/png');im.style.width=w+'px';im.style.height=h+'px';im.style.display='block';svg.replaceWith(im);ok()};img.onerror=()=>ok();img.src=src});
+  });
+  await Promise.all(jobs);
+  await Promise.all([...root.querySelectorAll('img')].map(im=>im.complete?0:new Promise(ok=>{im.onload=im.onerror=ok})));
+}
+let pdfBusy=false,lastPdf=null;
+async function makePdf(){
+  if(pdfBusy)return;
+  const list=pickedInOrder();
+  if(!list.length){tbMsg.textContent='先に、PDFにする問題の「選ぶ」にチェックを入れてください。';return}
+  pdfBusy=true;tbMsg.textContent='PDFを作成中です…（'+list.length+'枚）';
+  const box=document.getElementById('pdfbox');
+  try{
+    await loadPdfLibs();
+    box.innerHTML=sheetsHtml(list,document.getElementById('ws-ch').checked);
+    if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+    await inlineSvg(box);
+    const pdf=new window.jspdf.jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+    const sheets=[...box.querySelectorAll('.sheet')];
+    for(let k=0;k<sheets.length;k++){
+      tbMsg.textContent='PDFを作成中です…（'+(k+1)+' / '+sheets.length+'枚）';
+      const c=await window.html2canvas(sheets[k],{scale:2,backgroundColor:'#ffffff',logging:false,useCORS:true});
+      if(k)pdf.addPage('a4','landscape');
+      pdf.addImage(c.toDataURL('image/jpeg',0.92),'JPEG',8,8,281,190);
+    }
+    const blob=pdf.output('blob');
+    const name='ワークシート_'+list.map(i=>String(D[i][13]).padStart(3,'0')).slice(0,5).join('-')+(list.length>5?'など':'')+'.pdf';
+    lastPdf=new File([blob],name,{type:'application/pdf'});
+    tbMsg.innerHTML='<span class="tb-pdf">PDFができました。<button type="button" id="pdf-go">PDFを開く・保存する</button></span>';
+    document.getElementById('pdf-go').addEventListener('click',sharePdf);
+  }catch(e){
+    tbMsg.textContent='PDFを作れませんでした。電波のよいところで、もう一度試してください。';
+  }finally{box.innerHTML='';pdfBusy=false}
+}
+async function sharePdf(){
+  if(!lastPdf)return;
+  if(navigator.canShare&&navigator.canShare({files:[lastPdf]})){
+    try{await navigator.share({files:[lastPdf],title:lastPdf.name});return}catch(e){if(e&&e.name==='AbortError')return}
+  }
+  const url=URL.createObjectURL(lastPdf);const a=document.createElement('a');a.href=url;a.download=lastPdf.name;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+document.getElementById('ws-pdf').addEventListener('click',makePdf);
 updPk();
 const fTg=document.getElementById('f-tg'),fPanel=document.getElementById('fpanel'),fSum=document.getElementById('f-sum');
 fTg.addEventListener('click',()=>{const o=fPanel.hidden;fPanel.hidden=!o;fTg.setAttribute('aria-expanded',o);fTg.textContent=o?'絞り込み ▲':'絞り込み ▼'});
