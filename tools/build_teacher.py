@@ -39,6 +39,7 @@ rep("let subj='all',dom='all',kw='',ord='subj',showCol=true,chAll=false,lv='0';"
     "let subj='all',dom='all',kw='',ord='subj',showCol=true,chAll=true,lv='0';")
 rep('<button class="unused-toggle" id="ch-tg" aria-pressed="false">', '<button class="unused-toggle" id="ch-tg" aria-pressed="true">')
 rep('if(thought.has(i)){open(i);return}', '{open(i);return}')
+rep("const SHOW_DONE=true,", "const SHOW_DONE=false,")
 # 表示中の問題を記録
 rep("let html='',lastB='',lastM='',n=0,nc=0;", "let html='',lastB='',lastM='',n=0,nc=0;vis=[];")
 rep("    n++;\n    const chHtml", "    n++;vis.push(i);\n    const chHtml")
@@ -75,7 +76,7 @@ TOOLBAR = '''  <div class="tbar" id="tbar">
   </div>
 '''
 rep('  <div class="tablebox" id="box">', TOOLBAR + '  <div class="tablebox" id="box">')
-rep("  count.textContent=n+'題'+(nc?`・コラム${nc}`:'');", "  count.textContent=n+'題'+(nc?`・コラム${nc}`:'');\n  if(typeof updSum==='function')updSum();")
+rep("  count.textContent=n+'題'+(nc?`・コラム${nc}`:'')+", "  if(typeof updSum==='function')setTimeout(updSum);\n  count.textContent=n+'題'+(nc?`・コラム${nc}`:'')+")
 
 OVERLAY = '''
 <div id="pv" hidden role="dialog" aria-label="提示モード">
