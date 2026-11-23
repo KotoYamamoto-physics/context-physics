@@ -205,7 +205,11 @@ tr.reveal td{background:var(--answer-soft);border-bottom:2px solid var(--answer)
     </div>
     <button class="unused-toggle" id="c-tg" aria-pressed="true">コラムも表示</button>
     <button class="unused-toggle" id="ch-tg" aria-pressed="false">選択肢をはじめから表示</button>
-    <button class="unused-toggle" id="u-tg" aria-pressed="false">まだ解いていない問題だけ</button>
+    <div class="seg" role="group" aria-label="解いた問題" id="t-seg">
+      <button data-t="all" aria-pressed="true">解いた・解いていない両方</button>
+      <button data-t="todo" aria-pressed="false">まだ解いていない</button>
+      <button data-t="done" aria-pressed="false">✓ 解いた</button>
+    </div>
     <input type="search" id="q" placeholder="キーワードで絞り込み" aria-label="キーワードで絞り込み">
     <span class="count" id="count"></span>
   </div>
@@ -344,7 +348,7 @@ const NC=7;
 const tb=document.getElementById('tb'),count=document.getElementById('count');
 let subj='all',dom='all',kw='',ord='subj',showCol=true,chAll=false,lv='0';
 const shownCh=new Set();
-const SHOW_DONE=true,DK='cbp-solved';let onlyTodo=false;
+const SHOW_DONE=true,DK='cbp-solved';let dview='all';
 const done=new Set((()=>{try{return JSON.parse(localStorage.getItem(DK)||'[]')}catch(e){return []}})());
 const dkey=r=>r[0]+'|'+r[6];
 function saveDone(){try{localStorage.setItem(DK,JSON.stringify([...done]))}catch(e){}}
@@ -379,7 +383,7 @@ function render(){
     const isCol=f==='コラム';
     if(isCol&&!showCol)return;
     if(lv!=='0'&&(isCol||r[14]!==+lv))return;
-    if(onlyTodo&&(isCol||done.has(dkey(r))))return;
+    if(dview!=='all'&&(isCol||(dview==='todo')===done.has(dkey(r))))return;
     if(kw&&![b0,m0,el0,g[0],g[1],g[2],th,q,ch.join(' '),isCol?a:''].join(' ').includes(kw))return;
     const bk=fld?b:s+b;
     if(bk!==lastB){html+=`<tr class="big"><td colspan="${NC}">${fld?'':esc(s)+'　'}${esc(b)}</td></tr>`;lastB=bk;lastM=''}
@@ -408,7 +412,7 @@ tb.addEventListener('click',e=>{
     shownCh.add(i);const r=D[i];document.getElementById('ch-'+i).innerHTML=`<ol>${r[8].map((c,j)=>`<li data-l="${'アイウエ'[j]}">${esc(c)}</li>`).join('')}</ol>`;
   }else if(act==='done'){
     const r=D[i],k=dkey(r);done.has(k)?done.delete(k):done.add(k);saveDone();
-    if(onlyTodo){render();return}
+    if(dview!=='all'){render();return}
     const on=done.has(k);btn.setAttribute('aria-pressed',on);btn.textContent=on?'✓ 解いた':'解いたらチェック';btn.closest('tr').classList.toggle('solved',on);
     count.textContent=count.textContent.replace(/（解いた問題：.*）$/,`（解いた問題：全${D.filter(r=>r[5]!=='コラム').length}題中${D.filter(r=>r[5]!=='コラム'&&done.has(dkey(r))).length}題）`);
   }else if(act==='toggle'){
@@ -427,9 +431,9 @@ seg('data-s',v=>subj=v);
 seg('data-d',v=>dom=v);
 seg('data-o',v=>ord=v);
 seg('data-v',v=>lv=v);
+seg('data-t',v=>dview=v);
 document.getElementById('ch-tg').addEventListener('click',e=>{chAll=!chAll;e.currentTarget.setAttribute('aria-pressed',chAll);render()});
-document.getElementById('u-tg').addEventListener('click',e=>{onlyTodo=!onlyTodo;e.currentTarget.setAttribute('aria-pressed',onlyTodo);render()});
-if(!SHOW_DONE)document.getElementById('u-tg').hidden=true;
+if(!SHOW_DONE)document.getElementById('t-seg').style.display='none';
 document.getElementById('c-tg').addEventListener('click',e=>{showCol=!showCol;e.currentTarget.setAttribute('aria-pressed',showCol);render()});
 document.getElementById('q').addEventListener('input',e=>{kw=e.target.value.trim();render()});
 render();
