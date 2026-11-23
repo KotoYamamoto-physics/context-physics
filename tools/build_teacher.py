@@ -15,6 +15,10 @@ def rep(a, b, count=1):
         sys.exit(f'置換できません（{n}件）: {a[:60]}')
     s = s.replace(a, b)
 
+rep('href="icons/icon-32.png"', 'href="../icons/teacher-icon-32.png"')
+rep('href="icons/icon-192.png"', 'href="../icons/teacher-icon-192.png"')
+rep('href="icons/icon-180.png"', 'href="../icons/teacher-icon-180.png"')
+rep('<meta name="apple-mobile-web-app-title" content="身近な物理">', '<meta name="apple-mobile-web-app-title" content="物理 教師用">')
 rep('<title>身のまわりから考える物理</title>',
     '<title>身のまわりから考える物理 教師用</title>\n<meta name="robots" content="noindex,nofollow">')
 rep('<h1><span class="nb">身のまわりから考える物理</span>　<span class="nb">物理基礎・物理</span></h1>', '<h1><span class="nb">身のまわりから考える物理</span>　<span class="nb">教師用</span></h1>')
